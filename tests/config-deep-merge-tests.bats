@@ -3,6 +3,7 @@
 load tests_helpers
 
 COMPOSE_FILE=docker-compose-simple.yml
+JENKINS_DOCKER_NETWORK_NAME=jenkins-deep-merge-tests
 
 function groovy_test(){
     run_groovy_script $COMPOSE_FILE groovy/deep-merge/$1
@@ -14,6 +15,8 @@ function groovy_test(){
 
     JENKINS_ENV_CONFIG_YML_URL="file://${TESTS_CONTAINER_CONF_DIR}/dir1,file://${TESTS_CONTAINER_CONF_DIR}/dir2,file://${TESTS_CONTAINER_CONF_DIR}/dir3/*.yml" \
     docker_compose_up $COMPOSE_FILE
+    jenkins_addr=$(docker-compose -f $TESTS_DIR/$COMPOSE_FILE port jenkins 8080)
+    health_check http://${jenkins_addr}/login
 
     health_check http://0.0.0.0:8080/login
 }

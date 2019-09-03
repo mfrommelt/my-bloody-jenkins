@@ -3,6 +3,7 @@
 load tests_helpers
 
 COMPOSE_FILE=docker-compose-simple.yml
+JENKINS_DOCKER_NETWORK_NAME=jenkins-config-handlers-tests
 
 function groovy_test(){
     run_groovy_script $COMPOSE_FILE groovy/config-handlers/${BATS_TEST_DESCRIPTION}Test.groovy

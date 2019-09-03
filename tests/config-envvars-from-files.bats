@@ -3,6 +3,7 @@
 load tests_helpers
 
 COMPOSE_FILE=docker-compose-simple.yml
+JENKINS_DOCKER_NETWORK_NAME=jenkins-envvars-from-files
 
 function groovy_test(){
     run_groovy_script $COMPOSE_FILE groovy/envvars/$1
@@ -20,7 +21,8 @@ function groovy_test(){
     ENVVARS_DIRS=${TESTS_CONTAINER_CONF_DIR}/secret1,${TESTS_CONTAINER_CONF_DIR}/secret2 \
     docker_compose_up $COMPOSE_FILE
 
-    health_check http://0.0.0.0:8080/login
+    jenkins_addr=$(docker-compose -f $TESTS_DIR/$COMPOSE_FILE port jenkins 8080)
+    health_check http://${jenkins_addr}/login
 }
 
 @test "test values comming from secret1" {

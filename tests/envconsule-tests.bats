@@ -3,6 +3,7 @@
 load tests_helpers
 
 COMPOSE_FILE=docker-compose-simple.yml
+JENKINS_DOCKER_NETWORK_NAME=jenkins-envconsul-tests
 
 function groovy_test(){
     run_groovy_script $COMPOSE_FILE groovy/envconsul/$1
@@ -12,8 +13,10 @@ function groovy_test(){
     touch_config
     create_docker_network
     docker_compose_up docker-compose-consul.yml
-    health_check http://0.0.0.0:8500/v1/status/leader
-    health_check http://0.0.0.0:8200/v1/sys/health
+    console_addr=$(docker-compose -f $TESTS_DIR/docker-compose-consul.yml port consul 8500)
+    vault_addr=$(docker-compose -f $TESTS_DIR/docker-compose-consul.yml port vault 8200)
+    health_check http://${console_addr}/v1/status/leader
+    health_check http://${vault_addr}/v1/sys/health
 
     docker_compose_exec docker-compose-consul.yml consul consul kv put jenkins/git_password password
     docker_compose_exec docker-compose-consul.yml consul consul kv put jenkins/git_username username
@@ -27,8 +30,8 @@ function groovy_test(){
     ENVCONSUL_ADDITIONAL_ARGS="-vault-renew-token=false" \
     JENKINS_ENV_CONFIG_YML_URL=file://${TESTS_CONTAINER_CONF_DIR}/config.yml \
     docker_compose_up $COMPOSE_FILE
-
-    health_check http://0.0.0.0:8080/login
+    jenkins_addr=$(docker-compose -f $TESTS_DIR/$COMPOSE_FILE port jenkins 8080)
+    health_check http://${jenkins_addr}/login
 }
 
 @test "test values comming from consul" {

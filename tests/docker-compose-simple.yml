@@ -3,8 +3,8 @@ services:
   jenkins:
     image: odavid/my-bloody-jenkins
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8080"
+      - "50000"
     volumes:
       - ${TESTS_DIR}:${TESTS_CONTAINER_TESTS_DIR}
       - ${TESTS_HOST_CONF_DIR}:${TESTS_CONTAINER_CONF_DIR}
