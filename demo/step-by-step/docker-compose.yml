@@ -13,6 +13,9 @@ services:
       LDAP_READONLY_USER: 'true'
       LDAP_TLS: "false"
     command: --copy-service --loglevel debug
+    networks:
+        dockernet:
+            external: true
 
   jenkins:
     image: odavid/my-bloody-jenkins
@@ -37,7 +40,3 @@ services:
       http_proxy: ${http_proxy}
       https_proxy: ${https_proxy}
       no_proxy: ${no_proxy}
-
-    networks:
-      dockernet:
-        external: true
