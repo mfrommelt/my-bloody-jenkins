@@ -1,8 +1,8 @@
 security:
   realm: ldap
-  server: ldap:389 
-  rootDN: dc=example,dc=org
-  managerDN: cn=readonly,dc=example,dc=org
+  server: ldap:389
+  rootDN: dc=maxcloudjenkins,dc=org
+  managerDN: cn=readonly,dc=maxcloudjenkins,dc=org
   managerPassword: readonly
   userSearchBase: ou=users
   userSearchFilter: uid={0}
@@ -11,7 +11,7 @@ security:
   groupMembershipFilter: member={0}
   displayNameAttr: cn
   emailAttr: mail
-  
+
   permissions:
     jenkins.swarm:
       - hudson.model.Computer.Connect
